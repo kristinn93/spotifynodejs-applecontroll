@@ -5,30 +5,70 @@ var http = require('http');
 const PORT=8001; 
 
 var exec = require('child_process').exec;
-var play = './spotifyscripts/run spotifyscripts/play.scpt';
-var pause = './spotifyscripts/run spotifyscripts/pause.scpt';
+
 
 //We need a function which handles requests and send response
 function handleRequest(request, response){
-    response.end('It Works!! Path Hit: ' + request.url);
-    console.log("sup");
+    console.log("myUrl : " + request.url);
     if(request.url === "/play")
     {
     	console.log("Should play");
-    	exec(play, function(error, stdout, stderr) {
-    	});
+    	playMusic();
+    	
     }
     else if(request.url === "/pause")
     {
-    	console.log("should pause");
-    	exec(pause, function(error, stdout, stderr) {
-    	});
+    	pauseMusic();	
+    	
+    }
+    else if(request.url === "/next")
+    {
+    	playNext();
+    }
+    else if(request.url === "/currSong")
+    {
+    	currentSong();
+    	
     }
     else
     {
-    	console.log("nothing should happen;");
+    	console.log("nothing is happening;");
     }
 }
+
+function playMusic(){
+	var play = './spotifyscripts/run spotifyscripts/play.scpt';
+	exec(play, function(error, stdout, stderr) {
+    });
+
+};
+
+function pauseMusic(){
+	var pause = './spotifyscripts/run spotifyscripts/pause.scpt';
+	exec(pause, function(error, stdout, stderr) {
+    	});
+};
+
+function playNext(){
+	var next = './spotifyscripts/run spotifyscripts/next.scpt';
+	exec(next, function(error, stdout, stderr) {
+    	});
+};
+
+function currentSong(){
+	console.log("Getting current song");
+	var current = './spotifyscripts/run spotifyscripts/currentSong.scpt';
+	exec(current, function(error, stdout, stderr) {
+		console.log(stdout);
+		request.on('response', function (response) {
+		  var body = stdout;
+		  response.on('end', function () {
+		    console.log('BODY: ' + body);
+		  });
+		});
+  		response.end("Current song playing : " + stdout);
+    });
+};
 
 //Create a server
 var server = http.createServer(handleRequest);
