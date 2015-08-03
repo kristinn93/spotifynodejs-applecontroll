@@ -1,40 +1,40 @@
 //Lets require/import the HTTP module
 var http = require('http');
+var express = require('express');
 
+var app = express();
 //Lets define a port we want to listen to
-const PORT=8001; 
+const PORT=8001;
 
 var exec = require('child_process').exec;
 
+app.get('/play', function(req, res) {
+  console.log("Should play");
+  playMusic();
+  res.json('OK');
+});
 
-//We need a function which handles requests and send response
-function handleRequest(request, response){
-    console.log("myUrl : " + request.url);
-    if(request.url === "/play")
-    {
-    	console.log("Should play");
-    	playMusic();
-    	
+app.get('/pause', function(req, res) {
+  console.log("Should pause");
+  pauseMusic();
+  res.json('OK');
+});
+
+app.get('/next', function(req, res) {
+  playNext();
+  res.json('OK');
+});
+
+app.get('/currSong', function(req, res) {
+  currentSong(function(err, songName) {
+    if (err) {
+      res.status(500).json('Could not find song name');
     }
-    else if(request.url === "/pause")
-    {
-    	pauseMusic();	
-    	
-    }
-    else if(request.url === "/next")
-    {
-    	playNext();
-    }
-    else if(request.url === "/currSong")
-    {
-    	currentSong();
-    	
-    }
-    else
-    {
-    	console.log("nothing is happening;");
-    }
-}
+    var artist = songName.split('/')[0];
+    var song = songName.split('/')[1];
+    res.json({artist: artist, song: song});
+  });
+});
 
 function playMusic(){
 	var play = './spotifyscripts/run spotifyscripts/play.scpt';
@@ -55,25 +55,19 @@ function playNext(){
     	});
 };
 
-function currentSong(){
+function currentSong(cb){
 	console.log("Getting current song");
 	var current = './spotifyscripts/run spotifyscripts/currentSong.scpt';
 	exec(current, function(error, stdout, stderr) {
-		console.log(stdout);
-		request.on('response', function (response) {
-		  var body = stdout;
-		  response.on('end', function () {
-		    console.log('BODY: ' + body);
-		  });
-		});
-  		response.end("Current song playing : " + stdout);
-    });
+    cb(error, stdout);
+  });
 };
 
 //Create a server
-var server = http.createServer(handleRequest);
+var server = http.createServer(app);
 //Lets start our server
 server.listen(PORT, function(){
     //Callback triggered when server is successfully listening. Hurray!
     console.log("Server listening on: http://localhost:%s", PORT);
 });
+
