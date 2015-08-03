@@ -2,21 +2,32 @@
 var http = require('http');
 
 //Lets define a port we want to listen to
-const PORT=8080; 
+const PORT=8001; 
 
 var exec = require('child_process').exec;
 var play = './spotifyscripts/run spotifyscripts/play.scpt';
 var pause = './spotifyscripts/run spotifyscripts/pause.scpt';
 
-
 //We need a function which handles requests and send response
 function handleRequest(request, response){
     response.end('It Works!! Path Hit: ' + request.url);
-     exec(pause, function(error, stdout, stderr) {
-    	console.log(error);
-    	console.log(stdout);
-    	console.log(stderr);
-    });
+    console.log("sup");
+    if(request.url === "/play")
+    {
+    	console.log("Should play");
+    	exec(play, function(error, stdout, stderr) {
+    	});
+    }
+    else if(request.url === "/pause")
+    {
+    	console.log("should pause");
+    	exec(pause, function(error, stdout, stderr) {
+    	});
+    }
+    else
+    {
+    	console.log("nothing should happen;");
+    }
 }
 
 //Create a server
