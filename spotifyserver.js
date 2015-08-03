@@ -36,23 +36,25 @@ app.get('/currSong', function(req, res) {
   });
 });
 
+/**
+ * ADD CALLBACKS TO ALL FUNCTIONS BELOW TO HANDLE ERRORS
+ */
 function playMusic(){
 	var play = './spotifyscripts/run spotifyscripts/play.scpt';
 	exec(play, function(error, stdout, stderr) {
-    });
-
+  });
 };
 
 function pauseMusic(){
 	var pause = './spotifyscripts/run spotifyscripts/pause.scpt';
 	exec(pause, function(error, stdout, stderr) {
-    	});
+  });
 };
 
 function playNext(){
 	var next = './spotifyscripts/run spotifyscripts/next.scpt';
 	exec(next, function(error, stdout, stderr) {
-    	});
+  });
 };
 
 function currentSong(cb){
@@ -67,7 +69,7 @@ function currentSong(cb){
 var server = http.createServer(app);
 //Lets start our server
 server.listen(PORT, function(){
-    //Callback triggered when server is successfully listening. Hurray!
-    console.log("Server listening on: http://localhost:%s", PORT);
+  //Callback triggered when server is successfully listening. Hurray!
+  console.log("Server listening on: http://localhost:%s", PORT);
 });
 
