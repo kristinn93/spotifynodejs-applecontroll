@@ -8,6 +8,22 @@ const PORT=8001;
 
 var exec = require('child_process').exec;
 
+app.get('/ip', function(req, res){
+	var os = require('os');
+
+	var interfaces = os.networkInterfaces();
+	var addresses = [];
+	for (var k in interfaces) {
+    	for (var k2 in interfaces[k]) {
+        	var address = interfaces[k][k2];
+        	if (address.family === 'IPv4' && !address.internal) {
+            	addresses.push(address.address);
+        	}
+    	}
+	}
+	res.json({ip: addresses[0], port: PORT});
+});
+
 app.get('/play', function(req, res) {
 	var play = './spotifyscripts/run spotifyscripts/play.scpt';
 	doSpot(play, function(err, stdout){
