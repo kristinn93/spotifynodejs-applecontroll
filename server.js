@@ -3,10 +3,21 @@ var http = require('http');
 var express = require('express');
 
 var app = express();
+var server = http.createServer(app);
+
+var io = require('socket.io').listen(server);
 //Lets define a port we want to listen to
 const PORT=8001;
 
 var exec = require('child_process').exec;
+
+app.get('/', function(req, res){
+  res.sendFile('index.html');
+});
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
 
 app.get('/ip', function(req, res){
 	var os = require('os');
@@ -25,7 +36,8 @@ app.get('/ip', function(req, res){
 });
 
 app.get('/play', function(req, res) {
-	var play = './spotifyscripts/run spotifyscripts/play.scpt';
+	console.log('play function');
+	var play = './scripts/run scripts/play.scpt';
 	doSpot(play, function(err, stdout){
 		if(err) {
 			res.status(500).json('Can\'t play');
@@ -35,7 +47,7 @@ app.get('/play', function(req, res) {
 });
 
 app.get('/pause', function(req, res) {
-	var pause = './spotifyscripts/run spotifyscripts/pause.scpt';
+	var pause = './scripts/run scripts/pause.scpt';
 	doSpot(pause, function(err, stdout) {
 		if(err) {
 			res.status(500).json('Can\'t pause');
@@ -45,7 +57,7 @@ app.get('/pause', function(req, res) {
 });
 
 app.get('/next', function(req, res) {
-	var next = './spotifyscripts/run spotifyscripts/next.scpt';
+	var next = './scripts/run scripts/next.scpt';
 	doSpot(next, function(err, stdout){
 		if(err) {
 			res.status(500).json('Can\'t play next song');
@@ -55,7 +67,7 @@ app.get('/next', function(req, res) {
 });
 
 app.get('/currSong', function(req, res) {
-	var current = './spotifyscripts/run spotifyscripts/currentSong.scpt';
+	var current = './scripts/run scripts/currentSong.scpt';
 	doSpot(current, function(err, stdout) {
 		if(err) {
 			res.status(500).json('Can\'t find the name of song');
@@ -74,7 +86,7 @@ function doSpot(command, cb){
 
 
 //Create a server
-var server = http.createServer(app);
+
 //Lets start our server
 server.listen(PORT, function(){
   //Callback triggered when server is successfully listening. Hurray!
