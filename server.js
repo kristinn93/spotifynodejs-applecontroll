@@ -13,6 +13,8 @@ const PORT=8001;
 
 var exec = require('child_process').exec;
 
+var nowPlaying = '';
+
 app.get('/', function(req, res){
   //res.sendFile(__dirname + '/dist/index.html');
   res.redirect('/index.html')
@@ -20,6 +22,31 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
   console.log('a user connected');
+  socket.on('sup', function() {
+  	console.log('Sup from client');
+  });
+
+
+
+	setInterval(function(){ 
+		console.log('checking song');
+    	var current = './scripts/run scripts/currentSong.scpt';
+		doSpot(current, function(err, stdout) {
+			if(err) {
+				return;
+			}
+			else
+			{
+				if(nowPlaying !== stdout)
+				{
+					nowPlaying = stdout;
+					socket.emit('getSong');
+				}
+			}
+		});
+	}, 5000);
+
+//io.on sviginn
 });
 
 app.get('/', function(req, res) {
