@@ -3,6 +3,8 @@ var http = require('http');
 var express = require('express');
 
 var app = express();
+app.use(express.static(__dirname + '/dist'));
+//app.use(express.static(__dirname + '/dist'));
 var server = http.createServer(app);
 
 var io = require('socket.io').listen(server);
@@ -12,11 +14,16 @@ const PORT=8001;
 var exec = require('child_process').exec;
 
 app.get('/', function(req, res){
-  res.sendFile('index.html');
+  //res.sendFile(__dirname + '/dist/index.html');
+  res.redirect('/index.html')
 });
 
 io.on('connection', function(socket){
   console.log('a user connected');
+});
+
+app.get('/', function(req, res) {
+
 });
 
 app.get('/ip', function(req, res){
@@ -32,7 +39,7 @@ app.get('/ip', function(req, res){
         	}
     	}
 	}
-	res.json({ip: addresses[0], port: PORT});
+	res.json({ip: addresses[0], port: PORT.toString()});
 });
 
 app.get('/play', function(req, res) {
@@ -70,7 +77,7 @@ app.get('/currSong', function(req, res) {
 	var current = './scripts/run scripts/currentSong.scpt';
 	doSpot(current, function(err, stdout) {
 		if(err) {
-			res.status(500).json('Can\'t find the name of song');
+			res.status(500).json(' 	Can\'t find the name of song');
 		}
 		var artist = stdout.split('/')[0];
 		var song = stdout.split('/')[1];
