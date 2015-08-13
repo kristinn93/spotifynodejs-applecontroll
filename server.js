@@ -70,7 +70,6 @@ app.get('/ip', function(req, res){
 });
 
 app.get('/play', function(req, res) {
-	console.log('play function');
 	var play = './scripts/run scripts/play.scpt';
 	doSpot(play, function(err, stdout){
 		if(err) {
@@ -100,6 +99,16 @@ app.get('/next', function(req, res) {
 	});
 });
 
+app.get('/prev', function(req, res) {
+	var previous = './scripts/run scripts/prev.scpt';
+	doSpot(previous, function(err, stdout){
+		if(err) {
+			res.status(500).json('Can\'t play prev song');
+		}
+		res.json('OK');
+	});
+});
+
 app.get('/currSong', function(req, res) {
 	var current = './scripts/run scripts/currentSong.scpt';
 	doSpot(current, function(err, stdout) {
@@ -124,6 +133,6 @@ function doSpot(command, cb){
 //Lets start our server
 server.listen(PORT, function(){
   //Callback triggered when server is successfully listening. Hurray!
-  console.log("Server listening on: http://localhost:%s", PORT);
+  console.log("Open your browser with the following URL: http://localhost:%s", PORT);
 });
 
