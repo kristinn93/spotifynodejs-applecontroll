@@ -70,7 +70,7 @@ app.get('/ip', function(req, res){
 });
 
 app.get('/play', function(req, res) {
-	var play = './scripts/run scripts/play.scpt';
+	var play = './scripts/run scripts/play2.scpt';
 	doSpot(play, function(err, stdout){
 		if(err) {
 			res.status(500).json('Can\'t play');
