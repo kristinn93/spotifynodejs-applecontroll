@@ -109,6 +109,28 @@ app.get('/prev', function(req, res) {
 	});
 });
 
+app.get('/volDown', function(req, res) {
+	var previous = './scripts/run scripts/volDown.scpt';
+	doSpot(previous, function(err, stdout){
+		if(err) {
+			res.status(500).json('Can\'t turn volume downopen');
+		}
+		res.json('OK');
+	});
+});
+
+app.get('/volUp', function(req, res) {
+	var previous = './scripts/run scripts/volUp.scpt';
+	doSpot(previous, function(err, stdout){
+		if(err) {
+			res.status(500).json('Can\'t turn volume up');
+		}
+		res.json('OK');
+	});
+});
+
+
+
 app.get('/currSong', function(req, res) {
 	var current = './scripts/run scripts/currentSong.scpt';
 	doSpot(current, function(err, stdout) {
